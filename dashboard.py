@@ -3,18 +3,27 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def main():
-    st.title("My Streamlit Dashboard")
-    st.write("Welcome to my dashboard!")
+df = pd.read_excel('integrated_data.xlsx')
+df['Time'] = pd.to_datetime(df['Time'])
+df = df[df['Time'].dt.year >= 2018]
+df.dropna(inplace=True)
+df['Press'] = df['Press'].replace('Newslens', 'NewsLens')
 
-    # Create sample data for the bar chart
-    data = pd.DataFrame({
-        'Category': ['A', 'B', 'C', 'D'],
-        'Values': [4, 7, 1, 9]
-    })
+st.sidebar.title("Dashboard Options")
+chart_type = st.sidebar.radio("Select Chart Type", ["Press Clickbait Ratio", "Category Clickbait Ratio"])
 
-    # Display the bar chart
-    st.bar_chart(data.set_index('Category')['Values'])
+st.title("Clickbait Analysis Dashboard")
 
-if __name__ == "__main__":
-    main()
+if chart_type == "Press Clickbait Ratio":
+    # Bar chart for press clickbait ratio
+    press_ratios = df.groupby('Press')['IsClickbait'].mean()
+    st.bar_chart(press_ratios)
+    st.pyplot(plt)
+    st.title('Clickbait Ratio for Each Press')
+
+elif chart_type == "Category Clickbait Ratio":
+    # Bar chart for category clickbait ratio
+    category_ratios = df.groupby('Category')['IsClickbait'].mean()
+    st.bar_chart(category_ratios)
+    st.pyplot(plt)
+    st.title('Clickbait Ratio for Each News Category')
