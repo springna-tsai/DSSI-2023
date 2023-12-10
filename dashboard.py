@@ -3,9 +3,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-google_drive_link = "https://docs.google.com/spreadsheets/d/1HUngiEwcxpOi6xQ4b_Zqotv3kubdhvUE/edit?usp=share_link&ouid=106151830704109772809&rtpof=true&sd=true"
+df = pd.read_excel('integrated_data.xlsx')
 
-df = pd.read_csv(google_drive_link)
 print(df)
 df['Time'] = pd.to_datetime(df['Time'])
 df = df[df['Time'].dt.year >= 2018]
